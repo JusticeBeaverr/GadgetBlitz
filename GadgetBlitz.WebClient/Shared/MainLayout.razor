@@ -28,10 +28,12 @@
     <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2">
         <div class="py-3 py-lg-4" style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border); display: flex; flex-direction: column; gap: 1rem; align-items: center;">
             <RadzenImage Path="/images/logo.png"  style="width: 48px; height: 48px;"></RadzenImage>
-            <RadzenText Text="GadgetBlitz.WebClient" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" class="mb-0" style="color: var(--rz-primary-light);" />
+            <RadzenText Text="GadgetBlitz" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" class="mb-0" style="color: var(--rz-primary-light);" />
         </div>
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Home" Path="/" />
+            <RadzenPanelMenuItem Text="Smartphones" Path="smartphones" />
+            <RadzenPanelMenuItem Text="Laptops" Path="laptops" />
         </RadzenPanelMenu>
         <div class="py-3 py-md-4" style="padding: var(--rz-panel-menu-item-padding);">
             <RadzenText Text="GadgetBlitz.WebClient v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />

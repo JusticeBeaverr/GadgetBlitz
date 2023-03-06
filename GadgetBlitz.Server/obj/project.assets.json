@@ -317,11 +317,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fixu2\\source\\repos\\GadgetBlitz.Server\\GadgetBlitz.Server.csproj",
+      "projectUniqueName": "C:\\Users\\fixu2\\source\\repos\\GadgetBlitz\\GadgetBlitz.Server\\GadgetBlitz.Server.csproj",
       "projectName": "GadgetBlitz.Server",
-      "projectPath": "C:\\Users\\fixu2\\source\\repos\\GadgetBlitz.Server\\GadgetBlitz.Server.csproj",
+      "projectPath": "C:\\Users\\fixu2\\source\\repos\\GadgetBlitz\\GadgetBlitz.Server\\GadgetBlitz.Server.csproj",
       "packagesPath": "C:\\Users\\fixu2\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fixu2\\source\\repos\\GadgetBlitz.Server\\obj\\",
+      "outputPath": "C:\\Users\\fixu2\\source\\repos\\GadgetBlitz\\GadgetBlitz.Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\fixu2\\AppData\\Roaming\\NuGet\\NuGet.Config",
