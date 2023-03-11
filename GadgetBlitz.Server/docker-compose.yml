@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  gadgetblitz.server:
+    image: ${DOCKER_REGISTRY-}gadgetblitzserver
+    build:
+      context: .
+      dockerfile: Dockerfile
