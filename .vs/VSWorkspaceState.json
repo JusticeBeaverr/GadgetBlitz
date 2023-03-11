@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\GadgetBlitz.WebClient"
+    "\\GadgetBlitz.WebClient",
+    "\\GadgetBlitz.WebClient\\Pages"
   ],
-  "SelectedNode": "\\GadgetBlitz.WebClient\\GadgetBlitz.WebClient.sln",
+  "SelectedNode": "\\GadgetBlitz.WebClient\\Pages\\Smartphones.razor",
   "PreviewInSolutionExplorer": false
 }

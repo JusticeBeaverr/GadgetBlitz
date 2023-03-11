@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadgetBlitz.Server", "GadgetBlitz.Server.csproj", "{37408CCA-FD17-4A3B-B656-27B04B63F6A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GadgetBlitz.Server", "GadgetBlitz.Server.csproj", "{37408CCA-FD17-4A3B-B656-27B04B63F6A9}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{060F6EBA-6309-471E-B420-9160C8D79158}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{37408CCA-FD17-4A3B-B656-27B04B63F6A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37408CCA-FD17-4A3B-B656-27B04B63F6A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37408CCA-FD17-4A3B-B656-27B04B63F6A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060F6EBA-6309-471E-B420-9160C8D79158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060F6EBA-6309-471E-B420-9160C8D79158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060F6EBA-6309-471E-B420-9160C8D79158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060F6EBA-6309-471E-B420-9160C8D79158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
