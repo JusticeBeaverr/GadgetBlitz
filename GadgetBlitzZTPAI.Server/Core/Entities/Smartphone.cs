@@ -28,7 +28,7 @@
             Colors = new List<Color>();
             AVGPrice = avgPrice;
             PhotoUrl = photoUrl;
-
+            //asdas
         }
 
         public static Smartphone Create(string name, string ram, string memory, string screenDiagonal, string resolution, int camerasCount, float avgPrice, string photoUrl)
