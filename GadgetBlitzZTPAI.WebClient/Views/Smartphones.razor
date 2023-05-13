@@ -1,0 +1,36 @@
+﻿@inject ViewModels.ISmartphonesViewModel viewModel
+@using static Models.SmartphoneModel 
+
+
+@page "/smartphones"
+@using GadgetBlitzZTPAI.WebClient.Models
+@using System.Collections.ObjectModel
+
+<PageTitle>Smartphones</PageTitle>
+<div class="row">
+
+
+    <RadzenDataList Data="@viewModel.Smartphones"  >
+        <Template Context="smartphone">
+             <div style="width: 33.33%; display: inline-block; box-sizing: border-box; padding: 0 16px;">
+            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+                    <RadzenImage Path="@smartphone.ImageURL" Style="width: 100px; height: 100px; border-radius: 50%;" />
+                    <RadzenStack Gap="0">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Smartphone</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1"><b>@smartphone.SmartphoneName</b></RadzenText>
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Price</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1"><b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", smartphone.AVGPrice)</b></RadzenText>
+                    </RadzenStack>
+                </RadzenStack>
+
+                <RadzenButton Variant="Variant.Text" Text="Details" />
+            </RadzenCard>
+            </div>
+        </Template>
+    </RadzenDataList>
+
+
+
+
+</div>
