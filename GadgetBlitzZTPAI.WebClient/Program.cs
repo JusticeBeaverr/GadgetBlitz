@@ -14,6 +14,7 @@ builder.Services.AddScoped<INavigationService, NavigationService>();
 
 builder.Services.AddScoped<ISmartphonesService, SmartphonesService>();
 builder.Services.AddScoped<ISmartphonesViewModel, SmartphonesViewModel>();
+builder.Services.AddScoped<IAccountViewModel, AccountViewModel>();
 
 
 
