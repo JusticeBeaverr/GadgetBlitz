@@ -4,6 +4,7 @@ using GadgetBlitzZTPAI.Server.Core.Repositories;
 using GadgetBlitzZTPAI.Server.Infrastructure.DatabaseSettings;
 using GadgetBlitzZTPAI.Server.Infrastructure.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -28,7 +29,13 @@ builder.Services.AddApiVersioning(config =>
     config.ReportApiVersions = true;
 });
 
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.Authority = "https://localhost:5001";
+        o.TokenValidationParameters.ValidateAudience = false;
+        o.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+    });
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -58,6 +65,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

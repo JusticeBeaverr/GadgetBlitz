@@ -1,10 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@using GadgetBlitzZTPAI.WebClient.Models
+@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 @inject DialogService DialogService
 @inject ContextMenuService ContextMenuService
 @inject TooltipService TooltipService
 @inject NotificationService NotificationService
+
+@inject ViewModels.IAccountViewModel viewModel
 <RadzenDialog />
 <RadzenNotification />
 <RadzenTooltip />
@@ -31,7 +34,7 @@
         <div class="container-fluid pt-2 pt-md-3 pt-lg-4 pt-xl-5 pb-2 pb-lg-5" style="max-width: 1440px;">
             <div class="row">
                 <div class="col">
-                @Body
+                    @Body
                 </div>
             </div>
         </div>
@@ -44,14 +47,23 @@
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Home" Path="/" />
             <RadzenPanelMenuItem Text="Smartphones" Path="smartphones" />
-            
+            <RadzenPanelMenuItem Text="Compare" Path="" />
         </RadzenPanelMenu>
+        
+        <div style="margin-top: 45vh;">
+            <RadzenPanelMenu>
+                <RadzenPanelMenuItem Text="Login" Click="@ShowLoginDialog" />
+                <RadzenPanelMenuItem Text="Signup" Click="@ShowSignupDialog" />
+            </RadzenPanelMenu>
+        </div>
         <div class="py-3 py-md-4" style="padding: var(--rz-panel-menu-item-padding);">
-            <RadzenText Text="GadgetBlitz.WebClient v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+            <RadzenText Text="GadgetBlitz v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
             <RadzenText Text="Copyright Ⓒ 2023" TextStyle="Radzen.Blazor.TextStyle.Caption" class="mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
         </div>
     </RadzenSidebar>
 </RadzenLayout>
+
+
 
 @code {
    bool sidebarExpanded = true;
@@ -60,4 +72,102 @@
    {
        sidebarExpanded = !sidebarExpanded;
    }
+
+  
+
+    async Task ShowLoginDialog()
+    {
+        var result = await DialogService.OpenAsync("Login", ds =>
+        @<RadzenStack Gap="1.5rem">         
+        <RadzenTemplateForm TItem="UserModel" Data=@user  Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+        <RadzenStack Gap="1rem" Class="rz-p-sm-12">
+            <RadzenFormField Text="Username">
+                <ChildContent>
+                        <RadzenTextBox Name="Username" @bind-Value=@user.UserName />
+                        <RadzenLengthValidator Component="Username" Min="3" Text="Username should be at least 3 characters" Popup=@popup Style="position: absolute" />
+                </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Password" >
+                <ChildContent>
+                        <RadzenPassword Name="Password" @bind-Value=@user.Password />
+                        <RadzenLengthValidator Component="Password" Min="8" Text="Password should be at least 8 characters" Popup=@popup Style="position: absolute" />
+                </ChildContent>
+            </RadzenFormField>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+        </RadzenStack>
+    </RadzenTemplateForm>
+        </RadzenStack>);
+    }
+
+
+    async Task ShowSignupDialog()
+    {
+        var result = await DialogService.OpenAsync("Signup", ds =>
+    @<RadzenStack Gap="1.5rem">
+        <RadzenTemplateForm TItem="UserModel" Data=@user>
+            <RadzenStack Gap="1rem" Class="rz-p-sm-12">
+                <RadzenFormField Text="Username">
+                    <ChildContent>
+                        <RadzenTextBox Name="Username" @bind-Value=@user.UserName />
+                        <RadzenLengthValidator Component="Username" Min="3" Text="Username should be at least 3 characters" Popup=@popup Style="position: absolute" />  
+                    </ChildContent>
+                    <Helper>
+                        <RadzenRequiredValidator Component="Username" Text="Username is required." />
+                    </Helper>
+                </RadzenFormField>
+                <RadzenFormField Text="Email">
+                    <ChildContent>
+                        <RadzenTextBox Name="Email" @bind-Value=@user.Email />
+                        <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Popup=@popup Style="position: absolute" />
+                    </ChildContent>
+                    
+                </RadzenFormField>
+                <RadzenFormField Text="Password">
+                    <ChildContent>
+                        <RadzenPassword Name="Password" @bind-Value=@user.Password />
+                        <RadzenLengthValidator Component="Password" Min="8" Text="Password should be at least 8 characters" Popup=@popup Style="position: absolute" />
+                    </ChildContent> 
+                </RadzenFormField>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click=@Signup></RadzenButton>
+            </RadzenStack>
+        </RadzenTemplateForm>
+        </RadzenStack>
+    );
+    }
+
+    bool popup;
+    Variant variant = Variant.Outlined;
+
+    UserModel user = new UserModel();
+
+    async Task Login(){
+
+
+
+        viewModel.Login(user);
+
+
+
+    }
+
+    async Task Signup()
+    {
+
+    }
+    void OnSubmit(UserModel user)
+    {
+        viewModel.Login(user);
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error Summary", Detail = "Error Detail", Duration = 4000 });
+    }
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+
+        
+    }
+    
 }
