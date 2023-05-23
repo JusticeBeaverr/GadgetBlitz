@@ -53,6 +53,14 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+        builder.WithOrigins("https://localhost:7086")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -61,7 +69,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(builder => // Dodajemy konfiguracjê CORS
+{
+    builder.WithOrigins("https://localhost:7086")
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

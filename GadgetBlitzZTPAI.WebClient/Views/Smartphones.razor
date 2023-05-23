@@ -10,7 +10,8 @@
 <div class="row">
 
 
-    <RadzenDataList Data="@viewModel.Smartphones"  >
+    <RadzenDataList PageSize="6" WrapItems="true" AllowPaging="true"
+                    Data="@viewModel.Smartphones" TItem="SmartphoneModel">
         <Template Context="smartphone">
              <div style="width: 33.33%; display: inline-block; box-sizing: border-box; padding: 0 16px;">
             <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
@@ -23,7 +24,6 @@
                         <RadzenText TextStyle="TextStyle.Body1"><b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", smartphone.AVGPrice)</b></RadzenText>
                     </RadzenStack>
                 </RadzenStack>
-
                 <RadzenButton Variant="Variant.Text" Text="Details" />
             </RadzenCard>
             </div>

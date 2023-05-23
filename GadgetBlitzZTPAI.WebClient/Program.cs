@@ -20,7 +20,10 @@ builder.Services.AddScoped<IAccountViewModel, AccountViewModel>();
 
 
 
-//builder.Services.AddHttpClient<ISmartphonesService, SmartphonesService>();
+builder.Services.AddHttpClient<ISmartphonesService, SmartphonesService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:51052/gadgetblitz/api/v1/");
+});
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
