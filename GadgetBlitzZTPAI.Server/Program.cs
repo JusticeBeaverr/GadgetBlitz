@@ -1,10 +1,13 @@
 using GadgetBlitzZTPAI.Server.Application.Commands;
 using GadgetBlitzZTPAI.Server.Application.Queries;
+using GadgetBlitzZTPAI.Server.Core;
+using GadgetBlitzZTPAI.Server.Core.Entities;
 using GadgetBlitzZTPAI.Server.Core.Repositories;
 using GadgetBlitzZTPAI.Server.Infrastructure.DatabaseSettings;
 using GadgetBlitzZTPAI.Server.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,16 +15,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<SmartphonesDatabaseSettings>(
     builder.Configuration.GetSection("SmartphonesDatabase"));
+builder.Services.Configure<UsersDatabaseSettings>(
+    builder.Configuration.GetSection("SmartphonesDatabase"));
 
 builder.Services.AddSingleton<ISmartphoneRepository, SmartphoneRepository>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddMediatR(typeof(AddSmartphoneCommandHandler).GetTypeInfo().Assembly);
 builder.Services.AddMediatR(typeof(GetAllSmartphonesQueryHandler).GetTypeInfo().Assembly);
 builder.Services.AddMediatR(typeof(DeleteSmartphoneCommandHandler).GetTypeInfo().Assembly);
 builder.Services.AddMediatR(typeof(GetSmartphoneByIDQueryHandler).GetTypeInfo().Assembly);
-
+builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).GetTypeInfo().Assembly);
+builder.Services.AddMediatR(typeof(AuthenticateUserCommandHandler).GetTypeInfo().Assembly);
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddApiVersioning(config =>
 {
     config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
