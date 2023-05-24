@@ -27,4 +27,12 @@ namespace GadgetBlitzZTPAI.Server.Infrastructure.Profiles
             CreateMap<Camera, CameraDTO>();
         }
     }
+
+    public class SmartphoneToSmartphoneResponseDTO : Profile
+    {
+        public SmartphoneToSmartphoneResponseDTO()
+        {
+            CreateMap<Smartphone, SmartphoneResponseDTO>();
+        }
+    }
 }

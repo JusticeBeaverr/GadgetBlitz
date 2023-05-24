@@ -26,7 +26,7 @@ namespace GadgetBlitzZTPAI.Server.Application.Queries
         public async Task<SmartphonesListResponseDTO> Handle(GetAllSmartphonesQuery request, CancellationToken cancellationToken)
         {
             var smartphones = await _smartphoneRepository.GetAllAsync();
-            var result = new SmartphonesListResponseDTO(_mapper.Map<List<SmartphoneDTO>>(smartphones));
+            var result = new SmartphonesListResponseDTO(_mapper.Map<List<SmartphoneResponseDTO>>(smartphones));
             return result;
         }
     }

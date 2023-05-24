@@ -14,6 +14,7 @@ builder.Services.AddScoped<INavigationService, NavigationService>();
 
 builder.Services.AddScoped<ISmartphonesService, SmartphonesService>();
 builder.Services.AddScoped<ISmartphonesViewModel, SmartphonesViewModel>();
+builder.Services.AddScoped<ISmartphoneDetailsViewModel, SmartphoneDetailsViewModel>();
 builder.Services.AddScoped<IAccountViewModel, AccountViewModel>();
 
 
@@ -22,7 +23,7 @@ builder.Services.AddScoped<IAccountViewModel, AccountViewModel>();
 
 builder.Services.AddHttpClient<ISmartphonesService, SmartphonesService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:51052/gadgetblitz/api/v1/");
+    client.BaseAddress = new Uri("http://localhost:8080/gadgetblitz/api/v1/");
 });
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

@@ -4,9 +4,9 @@ namespace GadgetBlitzZTPAI.Server.Application.DTO
 {
     public class SmartphonesListResponseDTO
     {
-        public List<SmartphoneDTO> Items { get; set; }
+        public List<SmartphoneResponseDTO> Items { get; set; }
 
-        public SmartphonesListResponseDTO(List<SmartphoneDTO> items)
+        public SmartphonesListResponseDTO(List<SmartphoneResponseDTO> items)
         {
             Items = items;
         }

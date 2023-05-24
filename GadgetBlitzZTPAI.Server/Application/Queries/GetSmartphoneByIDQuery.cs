@@ -6,11 +6,11 @@ using MediatR;
 
 namespace GadgetBlitzZTPAI.Server.Application.Queries
 {
-    public record GetSmartphoneByIDQuery(Guid smartphoneID) : IRequest<SmartphoneDTO>
+    public record GetSmartphoneByIDQuery(Guid smartphoneID) : IRequest<SmartphoneResponseDTO>
     {
     }
 
-    public class GetSmartphoneByIDQueryHandler : IRequestHandler<GetSmartphoneByIDQuery, SmartphoneDTO>
+    public class GetSmartphoneByIDQueryHandler : IRequestHandler<GetSmartphoneByIDQuery, SmartphoneResponseDTO>
     {
         private readonly ISmartphoneRepository _smartphoneRepository;
 
@@ -22,10 +22,10 @@ namespace GadgetBlitzZTPAI.Server.Application.Queries
             _mapper = mapper;
         }
 
-        public async Task<SmartphoneDTO> Handle(GetSmartphoneByIDQuery request, CancellationToken cancellationToken)
+        public async Task<SmartphoneResponseDTO> Handle(GetSmartphoneByIDQuery request, CancellationToken cancellationToken)
         {
             var smartphone = await _smartphoneRepository.GetByIDAsync(request.smartphoneID);
-            return _mapper.Map<SmartphoneDTO>(smartphone);
+            return _mapper.Map<SmartphoneResponseDTO>(smartphone);
         }
     }
 }

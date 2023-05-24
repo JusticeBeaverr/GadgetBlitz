@@ -1,5 +1,6 @@
 ﻿using GadgetBlitzZTPAI.WebClient.Models;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
@@ -37,9 +38,17 @@ namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
             
         }
 
-        public Task<SmartphoneModel> GetSmartphoneByIdAsync(string id)
+        public async Task<SmartphoneModel> GetSmartphoneByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            var responsestring = await _httpClient.GetStringAsync($"id?id={id}");
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                IncludeFields = true,
+            };
+            var smartphone = JsonSerializer.Deserialize<SmartphoneModel>(responsestring, options);
+
+            return smartphone;
         }
     }
 }

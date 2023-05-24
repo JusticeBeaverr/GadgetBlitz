@@ -7,24 +7,28 @@
 @using System.Collections.ObjectModel
 
 <PageTitle>Smartphones</PageTitle>
+
+
 <div class="row">
 
 
+
+    <RadzenTextBox Placeholder="Search" Change="@(args => viewModel.SearchText = args)" Style="margin-bottom: 1rem;" />
     <RadzenDataList PageSize="6" WrapItems="true" AllowPaging="true"
                     Data="@viewModel.Smartphones" TItem="SmartphoneModel">
         <Template Context="smartphone">
-             <div style="width: 33.33%; display: inline-block; box-sizing: border-box; padding: 0 16px;">
-            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+             <div style=" display:flex; padding: 0 16px; flex-wrap:wrap;">
+            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width: 280px">
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
-                    <RadzenImage Path="@smartphone.ImageURL" Style="width: 100px; height: 100px; border-radius: 50%;" />
+                        <RadzenImage Path="@smartphone.PhotoUrl" Style="width: 140px; height: 150px;" />
                     <RadzenStack Gap="0">
                         <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Smartphone</RadzenText>
-                        <RadzenText TextStyle="TextStyle.Body1"><b>@smartphone.SmartphoneName</b></RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1"><b>@smartphone.Name</b></RadzenText>
                         <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Price</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body1"><b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", smartphone.AVGPrice)</b></RadzenText>
                     </RadzenStack>
                 </RadzenStack>
-                <RadzenButton Variant="Variant.Text" Text="Details" />
+                    <RadzenButton Variant="Variant.Text" Text="Details" Click="@( () => viewModel.NavigateToDetails (smartphone.SmartphoneId.ToString()))"/>
             </RadzenCard>
             </div>
         </Template>
@@ -34,3 +38,5 @@
 
 
 </div>
+
+
