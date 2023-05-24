@@ -20,7 +20,7 @@ namespace GadgetBlitzZTPAI.Server.Controllers
         }
 
         [HttpGet("smartphones")]
-        public async Task<ActionResult<List<SmartphoneDTO>>> GetAllSmartphones()
+        public async Task<ActionResult<List<SmartphoneResponseDTO>>> GetAllSmartphones()
         {
             var query = new GetAllSmartphonesQuery();
             var result = await _mediator.Send(query);
@@ -46,7 +46,7 @@ namespace GadgetBlitzZTPAI.Server.Controllers
         }
 
         [HttpGet("id")]
-        public async Task<ActionResult<SmartphoneDTO>> GetSmartphoneById(Guid id)
+        public async Task<ActionResult<SmartphoneResponseDTO>> GetSmartphoneById(Guid id)
         {
             var query = new GetSmartphoneByIDQuery(id);
             var result = await _mediator.Send(query);

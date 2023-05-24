@@ -12,5 +12,11 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
         Task NavigateToDetails(string id);
         ObservableCollection<SmartphoneModel> Smartphones { get; set; }
         Task GetSmartphones();
+        string SearchText { get; set; }
+
+        // Inne metody interfejsu
+
+        // Metoda do filtrowania smartfonów na podstawie wprowadzonego tekstu
+        void FilterSmartphones();
     }
 }

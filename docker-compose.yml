@@ -27,4 +27,4 @@ services:
       context: .
       dockerfile: GadgetBlitzZTPAI.Server/Dockerfile
     ports:
-      - 8080:8080
+     - 8080:80

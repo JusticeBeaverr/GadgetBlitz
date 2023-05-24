@@ -74,8 +74,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(c =>
+    {
+        c.RouteTemplate = "gadgetblitz/swagger/{documentname}/swagger.json";
+    });
+
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/gadgetblitz/swagger/v1/swagger.json", "gadgetblitz API V1");
+        c.RoutePrefix = "gadgetblitz/swagger";
+    });
 }
 app.UseCors(builder => // Dodajemy konfiguracjê CORS
 {
@@ -83,7 +92,7 @@ app.UseCors(builder => // Dodajemy konfiguracjê CORS
         .AllowAnyMethod()
         .AllowAnyHeader();
 });
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.UseAuthentication();

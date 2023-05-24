@@ -20,9 +20,9 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
             GetSmartphones();
         }
 
-        public Task NavigateToDetails(string id)
+        public async Task NavigateToDetails(string id)
         {
-            throw new NotImplementedException();
+            await NavigationService.NavigateAsync($"/details/{id}");
         }
 
         public async Task GetSmartphones()
@@ -31,6 +31,25 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
             foreach (var smartphone in smartphones)
             {
                 Smartphones.Add(smartphone);
+            }
+        }
+
+
+        public string SearchText { get; set; }
+
+        // Implementacja innych metod interfejsu
+
+        public void FilterSmartphones()
+        {
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                var filteredSmartphones = Smartphones.Where(s => s.Name.Contains(SearchText)).ToList();
+                Smartphones = new ObservableCollection<SmartphoneModel>(filteredSmartphones);
+            }
+            else
+            {
+                // Jeśli pole wyszukiwania jest puste, przywróć pełną listę smartfonów
+                // Możesz na przykład wczytać je ponownie z bazy danych lub innych źródeł
             }
         }
     }
