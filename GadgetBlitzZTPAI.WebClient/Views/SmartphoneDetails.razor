@@ -15,19 +15,27 @@
             <RadzenColumn SizeSM="10">
                 <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Smartphone</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1"><b>@viewModel.Model.Name</b></RadzenText>
-                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Ram</RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">RAM</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@viewModel.Model.RAM</b></RadzenText>
                 <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Memory</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@viewModel.Model.Memory</b></RadzenText>
                 <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Screen</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@viewModel.Model.ScreenDiagonal</b></RadzenText>
-                <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@viewModel.Model.TypeOfScreen</b></RadzenText>
                 <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Resolution</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@viewModel.Model.Resolution</b></RadzenText>
-                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Premiere Date</RadzenText>
-                <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@viewModel.Model.PremiereDate</b></RadzenText>
                 <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Cameras</RadzenText>
-       
+                @foreach (var camera in viewModel.Model.Cameras)
+                {
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>MP: @camera.Mpix</b></RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>Type: @camera.TypeOfCamera</b></RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>Video Resolution: @camera.WideoResolution</b></RadzenText>
+                }
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Colors</RadzenText>
+                @foreach (var color in viewModel.Model.Colors)
+                {
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@color.Name</b></RadzenText>
+                    
+                }
             </RadzenColumn>
         </RadzenRow>
     </RadzenCard>
