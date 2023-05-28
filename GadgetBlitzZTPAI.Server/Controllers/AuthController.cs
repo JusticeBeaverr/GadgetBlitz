@@ -45,20 +45,18 @@ namespace GadgetBlitzZTPAI.Server.Controllers
                 var query = new AuthenticateUserCommand(loginDto);
                 var result = await _mediator.Send(query);
 
-                if (!result.Success)
-                    return Unauthorized();
 
-                var responseDto = new LoginResponseDTO
-                {
-                    Token = result.Token,
-                    // Additional properties you may want to include in the response
-                };
+
+                var responseDto = new LoginResponseDTO(result.UserId, result.Username, result.Email, result.Token);
+                
+                    
+                
 
                 return Ok(responseDto);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return Unauthorized();
             }
         }
     }

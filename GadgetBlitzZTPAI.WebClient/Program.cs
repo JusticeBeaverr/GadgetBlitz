@@ -1,4 +1,6 @@
+using Blazored.LocalStorage;
 using GadgetBlitzZTPAI.WebClient;
+using GadgetBlitzZTPAI.WebClient.Services.Auth;
 using GadgetBlitzZTPAI.WebClient.Services.Navigation;
 using GadgetBlitzZTPAI.WebClient.Services.Smartphones;
 using GadgetBlitzZTPAI.WebClient.ViewModels;
@@ -13,15 +15,20 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<INavigationService, NavigationService>();
 
 builder.Services.AddScoped<ISmartphonesService, SmartphonesService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISmartphonesViewModel, SmartphonesViewModel>();
 builder.Services.AddScoped<ISmartphoneDetailsViewModel, SmartphoneDetailsViewModel>();
 builder.Services.AddScoped<IAccountViewModel, AccountViewModel>();
 
-
+builder.Services.AddBlazoredLocalStorage();
 
 
 
 builder.Services.AddHttpClient<ISmartphonesService, SmartphonesService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8080/gadgetblitz/api/v1/");
+});
+builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:8080/gadgetblitz/api/v1/");
 });

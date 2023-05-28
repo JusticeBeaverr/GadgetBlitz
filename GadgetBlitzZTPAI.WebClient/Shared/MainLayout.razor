@@ -46,13 +46,25 @@
             <RadzenPanelMenuItem Text="Smartphones" Path="smartphones" />
             <RadzenPanelMenuItem Text="Compare" Path="" />
         </RadzenPanelMenu>
-        
-        <div style="margin-top: 45vh;">
-            <RadzenPanelMenu>
-                <RadzenPanelMenuItem Text="Login" Click="@ShowLoginDialog" />
-                <RadzenPanelMenuItem Text="Signup" Click="@ShowSignupDialog" />
-            </RadzenPanelMenu>
-        </div>
+        @if (viewModel.IsUserAuthenticated)
+        {
+            <div style="margin-top: 45vh;">
+                <RadzenPanelMenu>
+                    <RadzenPanelMenuItem Text="Witaj " />
+                    <RadzenPanelMenuItem Text="Wyloguj"  />
+                    <RadzenPanelMenuItem Text="Profil" Path="profil" />
+                </RadzenPanelMenu>
+            </div>
+        }
+        else
+        {
+            <div style="margin-top: 45vh;">
+                <RadzenPanelMenu>
+                    <RadzenPanelMenuItem Text="Login" Click="@ShowLoginDialog" />
+                    <RadzenPanelMenuItem Text="Signup" Click="@ShowSignupDialog" />
+                </RadzenPanelMenu>
+            </div>
+        }
         <div class="py-3 py-md-4" style="padding: var(--rz-panel-menu-item-padding);">
             <RadzenText Text="GadgetBlitz v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
             <RadzenText Text="Copyright Ⓒ 2023" TextStyle="Radzen.Blazor.TextStyle.Caption" class="mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
@@ -87,7 +99,6 @@
             <RadzenFormField Text="Password" >
                 <ChildContent>
                         <RadzenPassword Name="Password" @bind-Value=@user.Password />
-                        <RadzenLengthValidator Component="Password" Min="8" Text="Password should be at least 8 characters" Popup=@popup Style="position: absolute" />
                 </ChildContent>
             </RadzenFormField>
                 <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
@@ -122,7 +133,7 @@
                 <RadzenFormField Text="Password">
                     <ChildContent>
                         <RadzenPassword Name="Password" @bind-Value=@user.Password />
-                        <RadzenLengthValidator Component="Password" Min="8" Text="Password should be at least 8 characters" Popup=@popup Style="position: absolute" />
+                        
                     </ChildContent> 
                 </RadzenFormField>
                 <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click=@Signup></RadzenButton>
