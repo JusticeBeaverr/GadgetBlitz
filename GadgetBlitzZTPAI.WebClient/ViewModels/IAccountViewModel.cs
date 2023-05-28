@@ -7,5 +7,6 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
         UserModel User { get; set; }
 
         Task Login(UserModel user);
+        bool IsUserAuthenticated { get; set; }
     }
 }

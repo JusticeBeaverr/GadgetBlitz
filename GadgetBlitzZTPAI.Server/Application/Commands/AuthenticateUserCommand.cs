@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GadgetBlitzZTPAI.Server.Application.Commands
 {
-    public record AuthenticateUserCommand(LoginDTO Login) : IRequest<AuthenticateUserResult>
+    public record AuthenticateUserCommand(LoginDTO Login) : IRequest<LoginResponseDTO>
     {
         
     }
-    public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, AuthenticateUserResult>
+    public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, LoginResponseDTO>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -24,26 +24,26 @@ namespace GadgetBlitzZTPAI.Server.Application.Commands
             _jwtService = jwtService;
         }
 
-        public async Task<AuthenticateUserResult> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
+        public async Task<LoginResponseDTO> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
         {
             // Pobierz użytkownika o podanej nazwie użytkownika
             var user = await _userRepository.GetByUsernameOrEmail(request.Login.Username, null);
             if (user == null)
             {
-                return new AuthenticateUserResult(false,"brak","Nie ma takiego użytkownika");
+                return null;
             }
 
             // Sprawdź poprawność hasła
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null, user.PasswordHash, request.Login.Password);
             if (passwordVerificationResult != PasswordVerificationResult.Success)
             {
-                return new AuthenticateUserResult(false, "brak", "Podano nie poprawne hasło"); 
+                return null;
             }
 
             // Uwierzytelnianie powiodło się, generuj token JWT
             var token = _jwtService.GenerateToken(user);
 
-            return new AuthenticateUserResult(true, token, "Zalogowano poprawnie");
+            return new LoginResponseDTO(user.UserId, user.Username, user.Email, token);
         }
     }
 }
