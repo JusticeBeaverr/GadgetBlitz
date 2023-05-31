@@ -7,5 +7,8 @@ namespace GadgetBlitzZTPAI.Server.Core.Repositories
         Task AddOrReplaceUserAsync(User user);
         Task DeleteAsync(Guid userId);
         Task<User> GetByUsernameOrEmail(string name, string email);
+        Task<List<User>> GetAllAsync();
+        Task<User> GetUserById(Guid userId);
+        Task UpdateUser(User user);
     }
 }

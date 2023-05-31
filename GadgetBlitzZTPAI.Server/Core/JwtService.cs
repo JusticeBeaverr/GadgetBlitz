@@ -16,29 +16,29 @@ namespace GadgetBlitzZTPAI.Server.Core
         }
         private string GetSecretKey()
         {
-            return _configuration["Jwt:SecretKey"];
+            return _configuration["AppSettings:Token"];
         }
         public string GenerateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value));
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(GetSecretKey()));
-
-
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-            
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(2),
-                signingCredentials: cred
-                );
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt ;
+
+            return jwt;
         }
 
         public bool ValidateToken(string token)

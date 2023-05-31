@@ -28,29 +28,17 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
         public async Task GetSmartphones()
         {
             var smartphones = await smartphonesService.GetSmartphonesAsync();
-            foreach (var smartphone in smartphones)
-            {
-                Smartphones.Add(smartphone);
-            }
+            Smartphones = new ObservableCollection<SmartphoneModel>(smartphones);
         }
 
+        
 
-        public string SearchText { get; set; }
-
-        // Implementacja innych metod interfejsu
-
-        public void FilterSmartphones()
+        public async Task DeleteSmartphone(string id)
         {
-            if (!string.IsNullOrEmpty(SearchText))
-            {
-                var filteredSmartphones = Smartphones.Where(s => s.Name.Contains(SearchText)).ToList();
-                Smartphones = new ObservableCollection<SmartphoneModel>(filteredSmartphones);
-            }
-            else
-            {
-                // Jeśli pole wyszukiwania jest puste, przywróć pełną listę smartfonów
-                // Możesz na przykład wczytać je ponownie z bazy danych lub innych źródeł
-            }
+            await smartphonesService.DeleteSmartphone(id);
+            Smartphones.Clear();
+            await GetSmartphones();
+            
         }
     }
 }

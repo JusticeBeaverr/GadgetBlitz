@@ -1,6 +1,144 @@
-﻿@page "/details/{UserId}"
+﻿@inject ViewModels.IAccountViewModel viewModel
+@inject NavigationManager NavigationManager
+@inject Services.Auth.CustomAuthenticationStateProvider auth;
+@inject Services.Auth.IAuthService auth2;
+@inject NotificationService NotificationService
+@inject IJSRuntime JSRuntime
+@inject DialogService DialogService
+@inject ContextMenuService ContextMenuService
+@inject TooltipService TooltipService
 
-@code {
-    [Parameter]
-    public string UserId { get; set; }
+@using GadgetBlitzZTPAI.WebClient.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
+@page "/profil"
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+@attribute [Authorize]
+
+<CascadingAuthenticationState>
+<AuthorizeView Roles="User">
+    <Authorized>
+<RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+        <RadzenImage Path="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" Style="width: 100px; height: 100px; border-radius: 50%;" />
+        <RadzenStack Gap="2">
+            <RadzenText TextStyle="TextStyle.H4"><b>Witaj @viewModel.LogUser.UserName</b></RadzenText>
+        </RadzenStack>
+    </RadzenStack>
+    <RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
+        <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Change your password</strong></RadzenText>
+        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Your current password</RadzenText>
+                    <RadzenTextBox Placeholder="Type your current password" @bind-Value=@newPass.OldPassword />
+        <br />
+        
+        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Your new password</RadzenText>
+        <RadzenTextBox Placeholder="Type your new password" @bind-Value=@newPass.NewPassword/>
+        
+        <br />
+        
+        
+        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Confirm new password</RadzenText>
+                    <RadzenTextBox Placeholder="Type your new password" @bind-Value=@newPass.NewPasswordConfirm/>
+                    <br />
+
+                    <br /><RadzenButton Shade="Shade.Lighter" Text="Change" ButtonStyle="ButtonStyle.Light" Click="@(() => ChangePassword())"/>
+        <br />
+        <br />
+        <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Delete your account</strong></RadzenText>
+        <RadzenButton Shade="Shade.Lighter" Text="Delete" ButtonStyle="ButtonStyle.Light" Click="@(() => DeleteUser((Guid)viewModel.LogUser.UserId))"/>
+        
+    </RadzenCard>
+
+</RadzenCard>
+
+</Authorized>
+        <NotAuthorized>
+            <p>Access denied. You must be an user to access this page.</p>
+        </NotAuthorized>
+</AuthorizeView>
+</CascadingAuthenticationState>
+@code{
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+
+        
+    }
+
+    
+    ChangePasswordCommand newPass = new ChangePasswordCommand();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await viewModel.GetUser();
+    }
+    public async Task DeleteUser(Guid id)
+    {
+        await viewModel.DeleteUser(id.ToString());
+        auth2.Logout();
+        NavigationManager.NavigateTo("/", true);
+
+
+    }
+    private string userName;
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await auth.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            userName = user.Identity.Name;
+
+            var roleClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim != null)
+            {
+                var role = roleClaim.Value;
+
+            }
+        }
+        else
+        {
+            userName = "Not logged in";
+            NavigationManager.NavigateTo("/");
+        }
+
+
+    }
+
+    public async Task ChangePassword()
+    {
+        NotificationService NotificationService;
+        newPass.UserId = viewModel.LogUser.UserId;
+
+        if (newPass.NewPassword == newPass.NewPasswordConfirm)
+        {
+            bool success = await viewModel.ChangePassword(newPass);
+
+            if (success)
+            {
+                // Jeśli zmiana hasła zakończyła się sukcesem
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success Summary", Detail = "Password changed", Duration = 4000 });
+                // Dodaj kod obsługujący dalsze działania po zmianie hasła
+            }
+            else
+            {
+                // Jeśli zmiana hasła nie powiodła się
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error Summary", Detail = "Password Change failed", Duration = 4000 });
+                // Dodaj kod obsługujący dalsze działania po nieudanej zmianie hasła
+            }
+        }
+        else
+        {
+            // Jeśli wprowadzone hasła nie pasują do siebie
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error Summary", Detail = "Passwords are diffrent", Duration = 4000 });
+            // Dodaj kod obsługujący dalsze działania po niepasujących hasłach
+        }
+    }
 }
+    

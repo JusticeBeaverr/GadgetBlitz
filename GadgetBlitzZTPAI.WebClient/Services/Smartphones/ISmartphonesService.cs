@@ -6,5 +6,6 @@ namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
     {
         Task<List<SmartphoneModel>> GetSmartphonesAsync();
         Task<SmartphoneModel> GetSmartphoneByIdAsync(string id);
+        Task DeleteSmartphone(string id);
     }
 }

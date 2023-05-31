@@ -1,4 +1,8 @@
 ﻿@using GadgetBlitzZTPAI.WebClient.Models
+@using GadgetBlitzZTPAI.WebClient.Services.Auth
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
@@ -8,6 +12,9 @@
 @inject NotificationService NotificationService
 
 @inject ViewModels.IAccountViewModel viewModel;
+@inject Services.Auth.CustomAuthenticationStateProvider auth;
+@inject Services.Auth.IAuthService auth2;
+@attribute [Authorize]
 <RadzenDialog />
 <RadzenNotification />
 <RadzenTooltip />
@@ -44,27 +51,41 @@
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Home" Path="/" />
             <RadzenPanelMenuItem Text="Smartphones" Path="smartphones" />
-            <RadzenPanelMenuItem Text="Compare" Path="" />
         </RadzenPanelMenu>
-        @if (viewModel.IsUserAuthenticated)
-        {
+       <CascadingAuthenticationState>
+    <AuthorizeView Roles="User">
+        <Authorized>
             <div style="margin-top: 45vh;">
                 <RadzenPanelMenu>
-                    <RadzenPanelMenuItem Text="Witaj " />
-                    <RadzenPanelMenuItem Text="Wyloguj"  />
+                    <RadzenPanelMenuItem Text="Logout" Click="@LogoutClick" />
                     <RadzenPanelMenuItem Text="Profil" Path="profil" />
+
                 </RadzenPanelMenu>
             </div>
-        }
-        else
-        {
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Admin">
+        <Authorized>
             <div style="margin-top: 45vh;">
                 <RadzenPanelMenu>
-                    <RadzenPanelMenuItem Text="Login" Click="@ShowLoginDialog" />
-                    <RadzenPanelMenuItem Text="Signup" Click="@ShowSignupDialog" />
+                    <RadzenPanelMenuItem Text="Logout" Click="@LogoutClick" />
+                    <RadzenPanelMenuItem Text="Admin" Path="Admin" />
                 </RadzenPanelMenu>
             </div>
-        }
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView>
+    <NotAuthorized>
+        <div style="margin-top: 45vh;">
+            <RadzenPanelMenu>
+                <RadzenPanelMenuItem Text="Login" Click="@ShowLoginDialog" />
+                <RadzenPanelMenuItem Text="Signup" Click="@ShowSignupDialog" />
+            </RadzenPanelMenu>
+        </div>
+    </NotAuthorized>
+            </AuthorizeView>
+</CascadingAuthenticationState>
         <div class="py-3 py-md-4" style="padding: var(--rz-panel-menu-item-padding);">
             <RadzenText Text="GadgetBlitz v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
             <RadzenText Text="Copyright Ⓒ 2023" TextStyle="Radzen.Blazor.TextStyle.Caption" class="mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
@@ -88,7 +109,7 @@
     {
         var result = await DialogService.OpenAsync("Login", ds =>
         @<RadzenStack Gap="1.5rem">         
-        <RadzenTemplateForm TItem="UserModel" Data=@user  Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+        <RadzenTemplateForm TItem="UserModel" Data=@user   InvalidSubmit=@OnInvalidSubmit>
         <RadzenStack Gap="1rem" Class="rz-p-sm-12">
             <RadzenFormField Text="Username">
                 <ChildContent>
@@ -101,7 +122,7 @@
                         <RadzenPassword Name="Password" @bind-Value=@user.Password />
                 </ChildContent>
             </RadzenFormField>
-                <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click=@Login> </RadzenButton>
         </RadzenStack>
     </RadzenTemplateForm>
         </RadzenStack>);
@@ -152,20 +173,47 @@
 
 
 
-        viewModel.Login(user);
+       var isLoginSuccesful = await viewModel.Login(user);
+        if (isLoginSuccesful)
+    {
+
+         NavigationManager.NavigateTo("/", true); 
+         
+    }
+    else
+    {
+        // Wyświetl okienko informujące o niepowodzeniu rejestracji
+        // np. przy użyciu biblioteki modal lub innego komponentu UI
+         ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error Summary", Detail = "Login failed", Duration = 4000 });
+    }
+
 
 
 
     }
 
     async Task Signup()
+{
+    var isRegistrationSuccessful = await viewModel.Signup(user);
+    
+    if (isRegistrationSuccessful)
     {
-
+        // Wyświetl okienko potwierdzenia sukcesu rejestracji
+        // np. przy użyciu biblioteki modal lub innego komponentu UI
+        
+         NavigationManager.NavigateTo("/", true); 
+         ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Succes Summary", Detail = "Succes", Duration = 8000 });
     }
-    void OnSubmit(UserModel user)
+    else
     {
-        viewModel.Login(user);
+        // Wyświetl okienko informujące o niepowodzeniu rejestracji
+        // np. przy użyciu biblioteki modal lub innego komponentu UI
+         ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error Summary", Detail = "Registration failed", Duration = 4000 });
     }
+    
+    
+}
+   
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
     {
@@ -175,7 +223,38 @@
     {
         NotificationService.Notify(message);
 
-        
+
     }
-    
+
+
+    private string userName;
+
+    protected override async Task OnInitializedAsync()
+{
+    var authenticationState = await auth.GetAuthenticationStateAsync();
+    var user = authenticationState.User;
+
+    if (user.Identity.IsAuthenticated)
+    {
+        userName = user.Identity.Name;
+
+        var roleClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+        if (roleClaim != null)
+        {
+            var role = roleClaim.Value;
+            
+        }
+    }
+    else
+    {
+        userName = "Not logged in";
+    }
 }
+    private async Task LogoutClick()
+    {
+        auth2.Logout();
+        NavigationManager.NavigateTo("/", true);
+        // Dodaj tutaj kod, który wykonuje akcje po wylogowaniu, na przykład przekierowanie na stronę logowania.
+    }
+}
+    

@@ -39,5 +39,24 @@ namespace GadgetBlitzZTPAI.Server.Infrastructure.Repositories
         {
             return await _usersCollection.Find(s => s.Username == name || s.Email == email).SingleOrDefaultAsync();
         }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Role, "User");
+            var users = await _usersCollection.Find(filter).ToListAsync();
+            return _mapper.Map<List<User>>(users);
+
+        }
+
+        public async Task<User> GetUserById(Guid userId)
+        {
+            return await _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateUser(User user)
+        {
+            await _usersCollection.ReplaceOneAsync(x => x.UserId == user.UserId, user);
+            
+        }
     }
 }

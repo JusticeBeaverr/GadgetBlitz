@@ -35,4 +35,12 @@ namespace GadgetBlitzZTPAI.Server.Infrastructure.Profiles
             CreateMap<Smartphone, SmartphoneResponseDTO>();
         }
     }
+
+    public class UserToUserResponseDTO : Profile
+    {
+        public UserToUserResponseDTO()
+        {
+            CreateMap<User, UserResponseDTO>();
+        }
+    }
 }

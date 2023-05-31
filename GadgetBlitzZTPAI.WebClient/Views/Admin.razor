@@ -1,0 +1,96 @@
+﻿@inject ViewModels.ISmartphonesViewModel viewModel
+@inject ViewModels.IAccountViewModel viewModel2
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+@inject Services.Auth.CustomAuthenticationStateProvider auth;
+@inject Services.Auth.IAuthService auth2;
+@page "/admin"
+
+@using GadgetBlitzZTPAI.WebClient.Models
+@using System.Collections.ObjectModel
+@using System.Security.Claims
+<CascadingAuthenticationState>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+<RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+        <RadzenImage Path="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" Style="width: 100px; height: 100px; border-radius: 50%;" />
+        <RadzenStack Gap="2">
+            <RadzenText TextStyle="TextStyle.H4"><b>Welcome</b></RadzenText>
+        </RadzenStack>
+    </RadzenStack>  
+</RadzenCard>
+
+<RadzenText TextStyle="TextStyle.H4"><b>Smartphones</b></RadzenText>
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false"  PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@viewModel.Smartphones" TItem="SmartphoneModel" ColumnWidth="300px" >
+    <Columns>
+        <RadzenDataGridColumn TItem="SmartphoneModel" Property="SmartphoneId" Filterable="false" Title="ID" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="SmartphoneModel" Property="Name" Title="Name" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn Width="160px" TItem="SmartphoneModel" Property="SmartphoneId" Title=".">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Text="Delete" Click="@(() => DeleteSm((Guid)data.SmartphoneId))" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+<RadzenText TextStyle="TextStyle.H4"><b>Users</b></RadzenText>
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@viewModel2.Users" TItem="UserModel" ColumnWidth="300px">
+    <Columns>
+        <RadzenDataGridColumn TItem="UserModel" Property="UserId" Filterable="false" Title="ID" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="UserModel" Property="UserName" Title="Name" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn Width="160px" TItem="UserModel" Property="UserId" Title=".">
+            <Template Context="data">
+                  <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Text="Delete" Click="@(() => DeleteUser((Guid)data.UserId))" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+    </Authorized>
+     <NotAuthorized>
+        <p>Access denied. You must be an administrator to access this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+</CascadingAuthenticationState>
+@code {
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
+    public async Task DeleteUser(Guid id)
+    {
+        await viewModel2.DeleteUser(id.ToString());
+        Refresh();
+    }
+    public async Task DeleteSm(Guid id)
+    {
+        await viewModel.DeleteSmartphone(id.ToString());
+        Refresh();
+    }
+      private string userName;
+
+    protected override async Task OnInitializedAsync()
+{
+    var authenticationState = await auth.GetAuthenticationStateAsync();
+    var user = authenticationState.User;
+
+    if (user.Identity.IsAuthenticated)
+    {
+        userName = user.Identity.Name;
+
+        var roleClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+        if (roleClaim != null)
+        {
+            var role = roleClaim.Value;
+            
+        }
+    }
+    else
+    {
+        userName = "Not logged in";
+         NavigationManager.NavigateTo("/");
+    }
+}
+}

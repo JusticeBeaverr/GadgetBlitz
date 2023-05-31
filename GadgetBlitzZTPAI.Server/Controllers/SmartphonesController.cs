@@ -3,7 +3,9 @@ using GadgetBlitzZTPAI.Server.Application.DTO;
 using GadgetBlitzZTPAI.Server.Application.Queries;
 using GadgetBlitzZTPAI.Server.Core.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GadgetBlitzZTPAI.Server.Controllers
 {
@@ -46,6 +48,7 @@ namespace GadgetBlitzZTPAI.Server.Controllers
         }
 
         [HttpGet("id")]
+        [Authorize]
         public async Task<ActionResult<SmartphoneResponseDTO>> GetSmartphoneById(Guid id)
         {
             var query = new GetSmartphoneByIDQuery(id);
@@ -53,7 +56,7 @@ namespace GadgetBlitzZTPAI.Server.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("smartphoneid"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteSmartphoneById(Guid id)
         {
             var command = new DeleteSmartphoneCommand(id);

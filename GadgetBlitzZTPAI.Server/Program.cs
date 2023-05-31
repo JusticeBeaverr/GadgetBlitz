@@ -9,7 +9,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +34,7 @@ builder.Services.AddMediatR(typeof(DeleteSmartphoneCommandHandler).GetTypeInfo()
 builder.Services.AddMediatR(typeof(GetSmartphoneByIDQueryHandler).GetTypeInfo().Assembly);
 builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).GetTypeInfo().Assembly);
 builder.Services.AddMediatR(typeof(AuthenticateUserCommandHandler).GetTypeInfo().Assembly);
+builder.Services.AddMediatR(typeof(ChangePasswordCommandHandler).GetTypeInfo().Assembly);
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddApiVersioning(config =>
 {
@@ -37,29 +43,43 @@ builder.Services.AddApiVersioning(config =>
     config.ReportApiVersions = true;
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(o =>
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        o.Authority = "https://localhost:5001";
-        o.TokenValidationParameters.ValidateAudience = false;
-        o.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
     });
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
         Title = "GadgetBlitzApi",
-
     });
 
-
-
+    
 });
-builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddCors(options =>
@@ -93,9 +113,9 @@ app.UseCors(builder => // Dodajemy konfiguracjê CORS
         .AllowAnyHeader();
 });
 //app.UseHttpsRedirection();
-
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 

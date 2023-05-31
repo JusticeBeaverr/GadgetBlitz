@@ -11,9 +11,6 @@
 
 <div class="row">
 
-
-
-    <RadzenTextBox Placeholder="Search" Change="@(args => viewModel.SearchText = args)" Style="margin-bottom: 1rem;" />
     <RadzenDataList PageSize="6" WrapItems="true" AllowPaging="true"
                     Data="@viewModel.Smartphones" TItem="SmartphoneModel">
         <Template Context="smartphone">

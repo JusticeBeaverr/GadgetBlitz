@@ -1,4 +1,5 @@
-﻿using GadgetBlitzZTPAI.WebClient.Models;
+﻿using Blazored.LocalStorage;
+using GadgetBlitzZTPAI.WebClient.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -10,11 +11,12 @@ namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
 
         private readonly HttpClient _httpClient;
         private readonly string _remoteServiceBaseUrl;
+        private readonly ILocalStorageService _localStorageService;
 
-        public SmartphonesService(HttpClient httpClient)
+        public SmartphonesService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             _httpClient = httpClient;
-
+            _localStorageService = localStorageService;
         }
 
         public async Task<List<SmartphoneModel>> GetSmartphonesAsync()
@@ -49,6 +51,19 @@ namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
             var smartphone = JsonSerializer.Deserialize<SmartphoneModel>(responsestring, options);
 
             return smartphone;
+        }
+
+        public async Task DeleteSmartphone(string id)
+        {
+            var token = await _localStorageService.GetItemAsync<string>("token");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+            HttpResponseMessage response = await _httpClient.DeleteAsync($"smartphoneid?id={id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException();
+            }
         }
     }
 }

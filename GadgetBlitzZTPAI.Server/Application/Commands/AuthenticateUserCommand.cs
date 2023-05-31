@@ -43,7 +43,7 @@ namespace GadgetBlitzZTPAI.Server.Application.Commands
             // Uwierzytelnianie powiodło się, generuj token JWT
             var token = _jwtService.GenerateToken(user);
 
-            return new LoginResponseDTO(user.UserId, user.Username, user.Email, token);
+            return new LoginResponseDTO(user.UserId, user.Username, user.Email, user.Role, token);
         }
     }
 }

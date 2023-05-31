@@ -8,6 +8,7 @@ namespace GadgetBlitzZTPAI.Server.Core.Entities
         public string Username { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+        public string Role { get; set; }
         
         
 
@@ -17,6 +18,7 @@ namespace GadgetBlitzZTPAI.Server.Core.Entities
             Username = username;
             Email = email;
             PasswordHash = password;
+            Role = "User";
             
         }
 
