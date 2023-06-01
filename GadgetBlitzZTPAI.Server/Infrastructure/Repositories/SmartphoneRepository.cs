@@ -58,5 +58,17 @@ namespace GadgetBlitzZTPAI.Server.Infrastructure.Repositories
             return await _smartphoneCollection.Find(s => s.Name == name).SingleOrDefaultAsync();
             
         }
+        public async Task AddReviewAsync(Guid smartphoneId, Review review)
+        {
+            var filter = Builders<Smartphone>.Filter.Eq(s => s.SmartphoneId, smartphoneId);
+            var update = Builders<Smartphone>.Update.Push(s => s.Reviews, review);
+            await _smartphoneCollection.UpdateOneAsync(filter, update);
+        }
+
+        public async Task UpdateSmartphoneAsync(Smartphone smartphone)
+        {
+            var filter = Builders<Smartphone>.Filter.Eq(s => s.SmartphoneId, smartphone.SmartphoneId);
+            await _smartphoneCollection.ReplaceOneAsync(filter, smartphone);
+        }
     }
 }

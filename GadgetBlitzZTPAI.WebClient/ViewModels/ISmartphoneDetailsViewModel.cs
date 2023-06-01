@@ -10,6 +10,7 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
         public SmartphoneModel Model { get; set; }
 
         Task GetSmartphoneById(string id);
+        Task<bool> AddReview(AddReviewCommand addReviewCommand);
 
     }
 }

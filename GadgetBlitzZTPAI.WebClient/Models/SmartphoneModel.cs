@@ -13,5 +13,6 @@
         public List<ColorModel> Colors { get; set; }
         public float AVGPrice { get; set; }
         public string PhotoUrl { get; set; }
+        public List<ReviewModel> Reviews { get; set; }
     }
 }

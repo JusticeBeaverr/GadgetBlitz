@@ -21,5 +21,6 @@ namespace GadgetBlitzZTPAI.Server.Application.DTO
         public List<ColorDTO> Colors { get; set; }
         public float AVGPrice { get; set; }
         public string PhotoUrl { get; set; }
+        public List<ReviewDTO> Reviews { get; set; }
     }
 }

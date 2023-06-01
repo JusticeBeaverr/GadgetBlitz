@@ -1,4 +1,11 @@
 ﻿@inject ViewModels.ISmartphoneDetailsViewModel viewModel
+@using GadgetBlitzZTPAI.WebClient.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject ViewModels.IAccountViewModel viewModel2;
+@inject Services.Auth.CustomAuthenticationStateProvider auth;
+@inject Services.Auth.IAuthService auth2;
+@attribute [Authorize]
 @page "/details/{SmartphoneId}"
 
 
@@ -34,21 +41,67 @@
                 @foreach (var color in viewModel.Model.Colors)
                 {
                     <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@color.Name</b></RadzenText>
-                    
+
                 }
             </RadzenColumn>
         </RadzenRow>
     </RadzenCard>
 </RadzenCard>
+<RadzenText TextStyle="TextStyle.H4"><b>Reviews</b></RadzenText>
+
+<CascadingAuthenticationState>
+    <AuthorizeView Roles="User">
+        <Authorized>
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Add Review</RadzenText>
+                <RadzenTextBox @bind-Value=@Review MaxLength="100" class="w-100" />
+                <RadzenButton Variant="Variant.Text" Text="Add" Click="@(() => AddReview())" />
+            </RadzenCard>
+        </Authorized>
+    </AuthorizeView>
+
+</CascadingAuthenticationState>
+
+<RadzenDataList PageSize="6" AllowPaging="true"
+                Data="@viewModel.Model.Reviews">
+    <Template Context="review">
+        <RadzenCard Style="width: 100%">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" G Class="rz-p-4">
+                <RadzenStack Gap="0">
+                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">@review.Username</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1"><b>@review.ReviewText</b></RadzenText>
+                </RadzenStack>
+            </RadzenStack>
+
+        </RadzenCard>
+    </Template>
+</RadzenDataList>
 
 
 
-@code{
+@code {
     [Parameter]
     public string SmartphoneId { get; set; }
+    public string Review { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
         await viewModel.GetSmartphoneById(SmartphoneId);
     }
+
+    public async Task AddReview()
+    {
+        await viewModel2.GetUser();
+        var review = new AddReviewCommand();
+        review.SmartphoneId = viewModel.Model.SmartphoneId;
+        review.Username = viewModel2.LogUser.UserName;
+        review.ReviewText = Review;
+        bool isSuccess = await viewModel.AddReview(review);
+
+        if (isSuccess)
+        {
+            await viewModel.GetSmartphoneById(SmartphoneId);
+        }
+    }
+
 }

@@ -13,6 +13,7 @@
         public List<Color> Colors { get; set; }
         public float AVGPrice { get; set; }
         public string PhotoUrl { get; set; }
+        public List<Review> Reviews { get; set; }
 
 
         public Smartphone(string name, string ram, string memory, string screenDiagonal, string resolution, int camerasCount, float avgPrice, string photoUrl)
@@ -28,6 +29,7 @@
             Colors = new List<Color>();
             AVGPrice = avgPrice;
             PhotoUrl = photoUrl;
+            Reviews = new List<Review>();
             //asdas
         }
 
@@ -48,6 +50,11 @@
         {
             Colors.AddRange(colors);
         }
+        public void AddReviews(List<Review> review)
+        {
+            Reviews.AddRange(review);
+        }
+
 
         public  Smartphone Modify(string name, string ram, string memory, string screenDiagonal, string resolution, int camerasCount, float avgPrice, string photoUrl)
         {
@@ -76,6 +83,17 @@
         {
             Colors.Clear();
             Colors.AddRange(colors);
+            SetModyficationDate();
+        }
+        public void ReplaceRevievs(List<Review> reviews)
+        {
+            Reviews.Clear();
+            Reviews.AddRange(reviews);
+            SetModyficationDate();
+        }
+        public void AddReview(Review review)
+        {
+            Reviews.Add(review);
             SetModyficationDate();
         }
     }

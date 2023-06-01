@@ -17,7 +17,13 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
         public SmartphoneModel Model {get; set;} = new SmartphoneModel();
         public List<CameraModel> Cameras { get; set; } = new List<CameraModel>();
         public List<ColorModel> Colors { get; set; } = new List<ColorModel>();
+        public List<ReviewModel> Reviews { get; set; } = new List<ReviewModel>();
 
+        public async Task<bool> AddReview(AddReviewCommand addReviewCommand)
+        {
+            var result = await _smartphonesService.AddReview(addReviewCommand);
+            return result;
+        }
 
         public async Task GetSmartphoneById(string id)
         {

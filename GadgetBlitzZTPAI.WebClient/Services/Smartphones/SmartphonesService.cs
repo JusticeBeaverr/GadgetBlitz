@@ -2,6 +2,7 @@
 using GadgetBlitzZTPAI.WebClient.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
@@ -63,6 +64,27 @@ namespace GadgetBlitzZTPAI.WebClient.Services.Smartphones
             {
                 var content = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException();
+            }
+        }
+
+        public async Task<bool> AddReview(AddReviewCommand addReviewCommand)
+        {
+            try
+            {
+                var token = await _localStorageService.GetItemAsync<string>("token");
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+                var json = JsonSerializer.Serialize(addReviewCommand);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("reviews", content);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
             }
         }
     }

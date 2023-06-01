@@ -33,17 +33,17 @@
     <RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
         <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Change your password</strong></RadzenText>
         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Your current password</RadzenText>
-                    <RadzenTextBox Placeholder="Type your current password" @bind-Value=@newPass.OldPassword />
+                    <RadzenPassword Placeholder="Type your current password" @bind-Value=@newPass.OldPassword />
         <br />
         
         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Your new password</RadzenText>
-        <RadzenTextBox Placeholder="Type your new password" @bind-Value=@newPass.NewPassword/>
+                    <RadzenPassword Placeholder="Type your new password" @bind-Value=@newPass.NewPassword />
         
         <br />
         
         
         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Confirm new password</RadzenText>
-                    <RadzenTextBox Placeholder="Type your new password" @bind-Value=@newPass.NewPasswordConfirm/>
+                    <RadzenPassword Placeholder="Type your new password" @bind-Value=@newPass.NewPasswordConfirm />
                     <br />
 
                     <br /><RadzenButton Shade="Shade.Lighter" Text="Change" ButtonStyle="ButtonStyle.Light" Click="@(() => ChangePassword())"/>
@@ -79,7 +79,7 @@
     }
     public async Task DeleteUser(Guid id)
     {
-        await viewModel.DeleteUser(id.ToString());
+        await viewModel.DeleteMyAccount(id.ToString());
         auth2.Logout();
         NavigationManager.NavigateTo("/", true);
 
@@ -122,9 +122,10 @@
 
             if (success)
             {
-                // Jeśli zmiana hasła zakończyła się sukcesem
+                
                 ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success Summary", Detail = "Password changed", Duration = 4000 });
-                // Dodaj kod obsługujący dalsze działania po zmianie hasła
+                auth2.Logout();
+        NavigationManager.NavigateTo("/", true);
             }
             else
             {

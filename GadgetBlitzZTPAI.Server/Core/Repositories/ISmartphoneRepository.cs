@@ -1,4 +1,5 @@
 ﻿using GadgetBlitzZTPAI.Server.Core.Entities;
+using MongoDB.Driver;
 
 namespace GadgetBlitzZTPAI.Server.Core.Repositories
 {
@@ -9,6 +10,8 @@ namespace GadgetBlitzZTPAI.Server.Core.Repositories
         Task AddOrReplaceSmartphoneAsync(Smartphone smartphone);
         Task DeleteAsync(Guid smartphoneID);
         Task<Smartphone> GetByName(string name);
+        Task UpdateSmartphoneAsync(Smartphone smartphone);
+        
 
     }
 }

@@ -48,7 +48,7 @@ namespace GadgetBlitzZTPAI.Server.Controllers
         }
 
         [HttpGet("id")]
-        [Authorize]
+        
         public async Task<ActionResult<SmartphoneResponseDTO>> GetSmartphoneById(Guid id)
         {
             var query = new GetSmartphoneByIDQuery(id);
@@ -62,6 +62,21 @@ namespace GadgetBlitzZTPAI.Server.Controllers
             var command = new DeleteSmartphoneCommand(id);
             await _mediator.Send(command);
             return NoContent();
+        }
+
+        [HttpPost("reviews"), Authorize(Roles = "User")]
+        public async Task<ActionResult> AddReview([FromBody] AddReviewDTO reviewDto)
+        {
+            try
+            {
+                var command = new AddReviewCommand(reviewDto);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

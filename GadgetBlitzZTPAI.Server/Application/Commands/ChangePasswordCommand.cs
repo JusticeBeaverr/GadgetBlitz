@@ -26,12 +26,15 @@ namespace GadgetBlitzZTPAI.Server.Application.Commands
                 var user = await _userRepository.GetUserById(request.ChangePasswordDto.UserId);
                 if (user != null)
                 {
-                    var isOldPasswordCorrect = user.VerifyPassword(request.ChangePasswordDto.OldPassword);
-                    if (isOldPasswordCorrect)
+                    var isOldPasswordCorrect = _passwordHasher.VerifyHashedPassword(null, user.PasswordHash, request.ChangePasswordDto.OldPassword);
+                    if (isOldPasswordCorrect == PasswordVerificationResult.Success)
                     {
-                        var newPasswordHash = _passwordHasher.HashPassword(user, request.ChangePasswordDto.NewPassword);
+                        var newPasswordHash = _passwordHasher.HashPassword(null, request.ChangePasswordDto.NewPassword);
                         user.PasswordHash = newPasswordHash;
-                        await _userRepository.UpdateUser(user);
+
+                        // Wywołaj metodę AddOrReplaceUserAsync, aby zaktualizować użytkownika w bazie danych
+                        await _userRepository.AddOrReplaceUserAsync(user);
+
                         return true;
                     }
                 }

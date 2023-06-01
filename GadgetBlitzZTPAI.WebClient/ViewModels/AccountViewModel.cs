@@ -84,6 +84,11 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
             Users.Clear();
             await GetUsers();
         }
+        public async Task DeleteMyAccount(string id)
+        {
+            await _authService.DeleteUser(id);
+
+        }
 
         public async Task<bool> ChangePassword(ChangePasswordCommand changePasswordCommand)
         {

@@ -16,6 +16,7 @@ namespace GadgetBlitzZTPAI.WebClient.ViewModels
         Task GetUsers();
         Task GetUser();
         Task DeleteUser(string id);
+        Task DeleteMyAccount(string id);
         Task<bool> ChangePassword(ChangePasswordCommand changePasswordCommand);
     }
 }
